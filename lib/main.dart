@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:trip_planner/app.dart';
+import 'package:trip_planner/screens/onboarding_screen.dart';
+import 'package:trip_planner/screens/splash_screen.dart';
 
 void main() {
-  //Material APP ->Parent container:1
-  //Scaffold ->Screen ->jati screen huncha
-  runApp(App());
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
+      initialRoute: '/splash',
+
+      routes: {
+        '/splash': (_) => const SplashScreen(),
+        '/onboarding': (_) => const OnboardingScreen(),
+      },
+    );
+  }
 }
