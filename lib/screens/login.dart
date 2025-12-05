@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trip_planner/screens/dashboard_screen.dart';
 import 'package:trip_planner/screens/signup.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     "Welcome\nBack.....",
                     style: TextStyle(
                       fontSize: 35,
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 9, 9, 9),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -84,7 +85,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const DashboardScreen(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
                               padding: const EdgeInsets.symmetric(vertical: 13),
