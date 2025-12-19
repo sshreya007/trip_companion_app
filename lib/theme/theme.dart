@@ -35,5 +35,11 @@ ThemeData getApplicationTheme() {
     ),
 
     // App Bar matches minimalist beach onboarding
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      foregroundColor: Colors.black,
+      centerTitle: true,
+    ),
   );
 }
