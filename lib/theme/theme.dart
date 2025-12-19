@@ -34,7 +34,6 @@ ThemeData getApplicationTheme() {
       type: BottomNavigationBarType.fixed,
     ),
 
-    // App Bar matches minimalist beach onboarding
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
