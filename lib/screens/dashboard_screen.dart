@@ -14,7 +14,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
-  List<Widget> lstBottomScreen = const [
+  final List<Widget> lstBottomScreen = const [
     HomeScreen(),
     CalendarScreen(),
     NotificationScreen(),
@@ -24,10 +24,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-
-      body: lstBottomScreen[_selectedIndex],
-
+      appBar: AppBar(
+        title: const Text("Dashboard"),
+        automaticallyImplyLeading: false,
+      ),
+      backgroundColor: const Color(0xFFE0F7F6),
+      body: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              "Welcome to the Dashboard Screen",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(child: lstBottomScreen[_selectedIndex]),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const [
