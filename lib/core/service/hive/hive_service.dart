@@ -1,4 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:trip_planner/core/constants/hive_table_constants.dart';
+import 'package:trip_planner/features/auth/data/models/auth_hive_model.dart';
 
 class HiveService {
   HiveService._(); // private constructor
@@ -47,5 +49,35 @@ class HiveService {
   Future<List<T>> getAll<T>(String boxName) async {
     final box = await openBox<T>(boxName);
     return box.values.toList().cast<T>();
+  }
+
+  //===============Auth Queries =================
+  Box<AuthHiveModel> get _authBox =>
+      Hive.box<AuthHiveModel>(HiveTableConstant.authBox);
+
+  Future<void> registerUser(AuthHiveModel model) async {
+    // Use email as the key
+    await _authBox.put(model.email, model);
+  }
+
+  //login
+  Future<AuthHiveModel?> loginUser(String email, String password) async {
+    final users = _authBox.values.where(
+      (user) => user.email == email && user.password == password,
+    );
+    if (users.isNotEmpty) {
+      return users.first;
+    }
+    return null;
+  }
+
+  //logout
+  Future<void> logoutUser(String id) async {
+    await _authBox.delete(id);
+  }
+
+  //get cuurent user
+  AuthHiveModel? getCurrentUser(String id) {
+    return _authBox.get(id);
   }
 }
