@@ -128,6 +128,8 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                                     ref
                                         .read(authViewModelProvider.notifier)
                                         .register(
+                                          fullName: usernameController.text
+                                              .trim(),
                                           username: usernameController.text
                                               .trim(),
                                           email: emailController.text.trim(),
