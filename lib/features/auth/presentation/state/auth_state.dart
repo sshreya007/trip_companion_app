@@ -49,4 +49,6 @@ class AuthState extends Equatable {
   /// Error state
   factory AuthState.error(String message) =>
       AuthState(status: AuthStatus.error, message: message);
+
+  get errorMessage => null;
 }
