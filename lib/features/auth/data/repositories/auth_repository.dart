@@ -52,13 +52,11 @@ class AuthRepository implements IAuthRepository {
 
   /// Logout user
   @override
-  Future<Either<Failure, AuthEntity>> logout(String id) async {
+  Future<Either<Failure, bool>> logout(String id) async {
     try {
-      final result = await _authDatasource.logout(); // pass id to datasource
-      if (!result) return Left(LocalDatabaseFailure('Logout failed'));
-
-      // You can return a dummy AuthEntity or the current user info if needed
-      return Right(AuthEntity(id: id, username: '', email: '', password: ''));
+      final result = await _authDatasource
+          .logout(); // make sure datasource accepts id
+      return result ? Right(true) : Left(LocalDatabaseFailure('Logout failed'));
     } catch (e) {
       return Left(LocalDatabaseFailure(e.toString()));
     }
