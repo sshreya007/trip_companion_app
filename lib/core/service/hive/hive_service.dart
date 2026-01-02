@@ -51,33 +51,33 @@ class HiveService {
     return box.values.toList().cast<T>();
   }
 
-  //===============Auth Queries =================
-  Box<AuthHiveModel> get _authBox =>
-      Hive.box<AuthHiveModel>(HiveTableConstant.authBox);
+  //================ Auth Queries =================
 
+  /// Register user
   Future<void> registerUser(AuthHiveModel model) async {
     // Use email as the key
     await _authBox.put(model.email, model);
   }
 
-  //login
+  /// Login user
   Future<AuthHiveModel?> loginUser(String email, String password) async {
     final users = _authBox.values.where(
       (user) => user.email == email && user.password == password,
     );
-    if (users.isNotEmpty) {
-      return users.first;
-    }
-    return null;
+    return users.isNotEmpty ? users.first : null;
   }
 
-  //logout
-  Future<void> logoutUser(String id) async {
-    await _authBox.delete(id);
+  /// Logout user by key (email)
+  Future<void> logoutUser(String email) async {
+    await _authBox.delete(email);
   }
 
-  //get cuurent user
-  AuthHiveModel? getCurrentUser(String id) {
-    return _authBox.get(id);
+  /// Get current user by key (email)
+  Future<AuthHiveModel?> getCurrentUser(String email) async {
+    return _authBox.get(email);
   }
+
+  // Getter for the auth box
+  Box<AuthHiveModel> get _authBox =>
+      Hive.box<AuthHiveModel>(HiveTableConstant.authBox);
 }
