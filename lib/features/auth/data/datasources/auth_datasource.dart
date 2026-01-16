@@ -9,8 +9,8 @@ abstract interface class IAuthDatasource {
 }
 
 abstract interface class IAuthRemoteDataSource {
-  Future<AuthApiModel?> register(AuthHiveModel user);
-  Future<AuthApiModel?> login(String email, String password);
-  Future<AuthApiModel?> getCurrentUser();
+  Future<AuthHiveModel?> register(AuthHiveModel user);
+  Future<AuthHiveModel?> login(String email, String password);
+  Future<AuthHiveModel?> getCurrentUser();
   Future<bool> logout();
 }
