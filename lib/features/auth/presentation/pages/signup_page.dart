@@ -23,7 +23,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
     /// LISTEN TO AUTH STATE
     ref.listen<AuthState>(authViewModelProvider, (previous, next) {
-      // 🔴 Error
+      //  Error
       if (next.status == AuthStatus.error && next.errorMessage != null) {
         ScaffoldMessenger.of(
           context,
@@ -31,7 +31,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
         ref.read(authViewModelProvider.notifier).clearError();
       }
 
-      // 🟢 Registered Successfully
+      //  Registered Successfully
       if (next.status == AuthStatus.registered) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registration successful')),
