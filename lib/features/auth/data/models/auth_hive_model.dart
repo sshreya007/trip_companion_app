@@ -43,4 +43,6 @@ class AuthHiveModel extends HiveObject {
       password: password,
     );
   }
+
+  toJson() {}
 }

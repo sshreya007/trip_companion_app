@@ -33,6 +33,10 @@ class ApiEndpoints {
 
   // ============ Comment Endpoints ============
   static const String comments = '/comments';
+
+  static String get register => null;
+
+  static String get login => null;
   static String commentById(String id) => '/comments/$id';
   static String commentsByItem(String itemId) => '/comments/item/$itemId';
   static String commentLike(String id) => '/comments/$id/like';
