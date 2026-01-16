@@ -5,6 +5,7 @@ import 'package:trip_planner/core/service/connectivity/network_info.dart';
 import 'package:trip_planner/features/auth/data/datasources/auth_datasource.dart';
 import 'package:trip_planner/features/auth/data/datasources/local/auth_local_datasource.dart';
 import 'package:trip_planner/features/auth/data/datasources/remote/auth_remote_datasource.dart';
+import 'package:trip_planner/features/auth/data/datasources/remote/auth_remote_datasource_provider.dart';
 import 'package:trip_planner/features/auth/data/models/auth_hive_model.dart';
 import 'package:trip_planner/features/auth/domain/entities/auth_entity.dart';
 import 'package:trip_planner/features/auth/domain/repositories/auth_repository.dart';
@@ -12,7 +13,7 @@ import 'package:trip_planner/features/auth/domain/repositories/auth_repository.d
 /// Provider for AuthRepository
 final authRepositoryProvider = Provider<IAuthRepository>((ref) {
   final authDatasource = ref.read(authLocalDatasourceProvider);
-  final authRemoteDatasource = ref.read(authRemotePr);
+  final authRemoteDatasource = ref.read(authRemoteDatasourceProvider);
   final networkInfo = ref.read(networkInfoProvider);
 
   return AuthRepository(
