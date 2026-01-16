@@ -10,6 +10,12 @@ class AuthRemoteDatasource implements IAuthRemoteDataSource {
 
   AuthRemoteDatasource({required ApiClient apiClient}) : _apiClient = apiClient;
 
+  // Provider for AuthRemoteDatasource
+  final authRemoteDatasourceProvider = Provider<IAuthRemoteDataSource>((ref) {
+    final apiClient = ref.read(apiClientProvider);
+    return AuthRemoteDatasource(apiClient: apiClient);
+  });
+
   @override
   Future<AuthHiveModel?> getCurrentUser() {
     // TODO: implement getCurrentUser

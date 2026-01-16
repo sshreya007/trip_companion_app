@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dartz/dartz.dart';
 import 'package:trip_planner/core/errors/failure.dart';
+import 'package:trip_planner/core/service/connectivity/network_info.dart';
 import 'package:trip_planner/features/auth/data/datasources/auth_datasource.dart';
 import 'package:trip_planner/features/auth/data/datasources/local/auth_local_datasource.dart';
+import 'package:trip_planner/features/auth/data/datasources/remote/auth_remote_datasource.dart';
 import 'package:trip_planner/features/auth/data/models/auth_hive_model.dart';
 import 'package:trip_planner/features/auth/domain/entities/auth_entity.dart';
 import 'package:trip_planner/features/auth/domain/repositories/auth_repository.dart';
@@ -10,14 +12,29 @@ import 'package:trip_planner/features/auth/domain/repositories/auth_repository.d
 /// Provider for AuthRepository
 final authRepositoryProvider = Provider<IAuthRepository>((ref) {
   final authDatasource = ref.read(authLocalDatasourceProvider);
-  return AuthRepository(authDatasource: authDatasource);
+  final authRemoteDatasource = ref.read(authRemotePr);
+  final networkInfo = ref.read(networkInfoProvider);
+
+  return AuthRepository(
+    authDatasource: authDatasource,
+    authRemoteDataSource: authRemoteDatasource,
+    networkInfo: networkInfo,
+  );
 });
 
 class AuthRepository implements IAuthRepository {
   final IAuthDatasource _authDatasource;
+  final IAuthRemoteDataSource _authRemoteDataSource;
+  final NetworkInfo _networkInfo;
 
-  AuthRepository({required IAuthDatasource authDatasource})
-    : _authDatasource = authDatasource;
+  AuthRepository({
+    required IAuthDatasource authDatasource,
+    required IAuthRemoteDataSource authRemoteDataSource,
+    required NetworkInfo networkInfo,
+    required authRemoteDatasource,
+  }) : _authDatasource = authDatasource,
+       _authRemoteDataSource = authRemoteDataSource,
+       _networkInfo = networkInfo;
 
   /// Register user
   @override
