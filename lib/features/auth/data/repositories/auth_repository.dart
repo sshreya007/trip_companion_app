@@ -20,6 +20,7 @@ final authRepositoryProvider = Provider<IAuthRepository>((ref) {
     authDatasource: authDatasource,
     authRemoteDataSource: authRemoteDatasource,
     networkInfo: networkInfo,
+    authRemoteDatasource: null,
   );
 });
 
