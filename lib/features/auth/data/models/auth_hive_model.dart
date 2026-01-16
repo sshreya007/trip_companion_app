@@ -45,4 +45,6 @@ class AuthHiveModel extends HiveObject {
   }
 
   toJson() {}
+
+  static Future<AuthHiveModel?> fromJson(Map<String, dynamic> data) async {}
 }

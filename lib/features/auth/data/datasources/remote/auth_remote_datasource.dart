@@ -25,7 +25,7 @@ class AuthRemoteDatasource implements IAuthRemoteDataSource {
 
     if (response.data['success'] == true) {
       final data = response.data['data'] as Map<String, dynamic>;
-      return AuthApiModel.fromJson(data);
+      return AuthHiveModel.fromJson(data);
     }
 
     throw Exception(response.data['message'] ?? 'Login failed');
@@ -33,8 +33,8 @@ class AuthRemoteDatasource implements IAuthRemoteDataSource {
 
   @override
   Future<bool> logout() {
-    // Usually handled client-side by deleting token
-    return true;
+    // TODO: implement getCurrentUser
+    throw UnimplementedError();
   }
 
   @override
@@ -47,7 +47,7 @@ class AuthRemoteDatasource implements IAuthRemoteDataSource {
     if (response.data['success'] == true) {
       final data = response.data['data'] as Map<String, dynamic>;
       final registeredUser = AuthApiModel.fromJson(data);
-      return registeredUser;
+      return AuthHiveModel.fromJson(data);
     }
 
     throw Exception(response.data['message'] ?? 'Registration failed');
