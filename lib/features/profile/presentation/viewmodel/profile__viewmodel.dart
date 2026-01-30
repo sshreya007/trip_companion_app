@@ -1,60 +1,150 @@
-// import 'dart:io';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:permission_handler/permission_handler.dart';
-// import '../state/profile_state.dart';
-// import '../../domain/usecases/upload_profile_photo_usecase.dart';
+import 'dart:io';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trip_planner/features/auth/presentation/view_model/auth_view_model.dart';
+import 'package:trip_planner/features/profile/domain/entities/profile_entity.dart';
+import 'package:trip_planner/features/profile/domain/usecases/get_profile_usecase.dart';
+import 'package:trip_planner/features/profile/domain/usecases/update_profile_usecase.dart';
+import 'package:trip_planner/features/profile/domain/usecases/upload_profile_image_usecase.dart';
+import 'package:trip_planner/features/profile/presentation/state/profile_state.dart';
+import 'package:trip_planner/features/profile/data/datasources/local/profile_local_datasource.dart';
+import 'package:trip_planner/features/profile/data/datasources/remote/profile_remote_datasource.dart';
+import 'package:trip_planner/features/profile/data/repositories/profile_repository_impl.dart';
 
-// final profileViewModelProvider =
-//     NotifierProvider<ProfileViewModel, ProfileState>(ProfileViewModel.new);
+// Providers
+final profileLocalDatasourceProvider = Provider<ProfileLocalDatasource>((ref) {
+  return ProfileLocalDatasource();
+});
 
-// class ProfileViewModel extends Notifier<ProfileState> {
-//   late final UploadProfilePhotoUsecase _uploadUsecase;
-//   final ImagePicker _picker = ImagePicker();
+final profileRemoteDatasourceProvider = Provider<ProfileRemoteDatasource>((
+  ref,
+) {
+  final dioClient = ref.read(dioClientProvider);
+  return ProfileRemoteDatasource(dioClient);
+});
 
-//   @override
-//   ProfileState build() {
-//     return const ProfileState();
-//   }
+final profileRepositoryProvider = Provider((ref) {
+  final localDatasource = ref.read(profileLocalDatasourceProvider);
+  final remoteDatasource = ref.read(profileRemoteDatasourceProvider);
+  return ProfileRepositoryImpl(localDatasource, remoteDatasource);
+});
 
-//   Future<void> pickFromCamera() async {
-//     final status = await Permission.camera.request();
-//     if (!status.isGranted) {
-//       state = state.copyWith(errorMessage: "Camera permission denied");
-//       return;
-//     }
+final getProfileUsecaseProvider = Provider((ref) {
+  final repository = ref.read(profileRepositoryProvider);
+  return GetProfileUsecase(repository);
+});
 
-//     final XFile? picked = await _picker.pickImage(source: ImageSource.camera);
-//     if (picked != null) {
-//       _upload(File(picked.path));
-//     }
-//   }
+final updateProfileUsecaseProvider = Provider((ref) {
+  final repository = ref.read(profileRepositoryProvider);
+  return UpdateProfileUsecase(repository);
+});
 
-//   Future<void> pickFromGallery() async {
-//     final status = await Permission.photos.request();
-//     if (!status.isGranted) {
-//       state = state.copyWith(errorMessage: "Gallery permission denied");
-//       return;
-//     }
+final uploadProfileImageUsecaseProvider = Provider((ref) {
+  final repository = ref.read(profileRepositoryProvider);
+  return UploadProfileImageUsecase(repository);
+});
 
-//     final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
-//     if (picked != null) {
-//       _upload(File(picked.path));
-//     }
-//   }
+final profileViewModelProvider =
+    NotifierProvider<ProfileViewModel, ProfileState>(ProfileViewModel.new);
 
-//   Future<void> _upload(File image) async {
-//     state = state.copyWith(status: ProfileStatus.loading);
+class ProfileViewModel extends Notifier<ProfileState> {
+  late final GetProfileUsecase _getProfileUsecase;
+  late final UpdateProfileUsecase _updateProfileUsecase;
+  late final UploadProfileImageUsecase _uploadProfileImageUsecase;
 
-//     final result = await _uploadUsecase(image);
+  @override
+  ProfileState build() {
+    _getProfileUsecase = ref.read(getProfileUsecaseProvider);
+    _updateProfileUsecase = ref.read(updateProfileUsecaseProvider);
+    _uploadProfileImageUsecase = ref.read(uploadProfileImageUsecaseProvider);
 
-//     result.fold(
-//       (failure) => state = state.copyWith(
-//         status: ProfileStatus.error,
-//         errorMessage: failure.message,
-//       ),
-//       (_) =>
-//           state = state.copyWith(status: ProfileStatus.success, image: image),
-//     );
-//   }
-// }
+    return const ProfileState();
+  }
+
+  Future<void> getProfile(String userId) async {
+    print('🎯 VIEWMODEL: Getting profile for $userId');
+
+    state = state.copyWith(status: ProfileStatus.loading);
+
+    final result = await _getProfileUsecase(userId);
+
+    result.fold(
+      (failure) {
+        print('❌ VIEWMODEL: Failed to get profile - ${failure.message}');
+        state = state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: failure.message,
+        );
+      },
+      (profile) {
+        print('✅ VIEWMODEL: Profile loaded - ${profile.email}');
+        state = state.copyWith(status: ProfileStatus.loaded, profile: profile);
+      },
+    );
+  }
+
+  Future<void> updateProfile(ProfileEntity profile) async {
+    print('🎯 VIEWMODEL: Updating profile');
+
+    state = state.copyWith(status: ProfileStatus.updating);
+
+    final result = await _updateProfileUsecase(profile);
+
+    result.fold(
+      (failure) {
+        print('❌ VIEWMODEL: Failed to update profile - ${failure.message}');
+        state = state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: failure.message,
+        );
+      },
+      (updatedProfile) {
+        print('✅ VIEWMODEL: Profile updated successfully');
+        state = state.copyWith(
+          status: ProfileStatus.updated,
+          profile: updatedProfile,
+        );
+      },
+    );
+  }
+
+  Future<void> uploadProfileImage(File imageFile, String userId) async {
+    print('🎯 VIEWMODEL: Uploading profile image');
+
+    state = state.copyWith(status: ProfileStatus.uploadingImage);
+
+    final result = await _uploadProfileImageUsecase(imageFile, userId);
+
+    result.fold(
+      (failure) {
+        print('❌ VIEWMODEL: Failed to upload image - ${failure.message}');
+        state = state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: failure.message,
+        );
+      },
+      (imageUrl) {
+        print('✅ VIEWMODEL: Image uploaded - $imageUrl');
+
+        // Update profile with new image URL
+        if (state.profile != null) {
+          final updatedProfile = state.profile!.copyWith(
+            profileImageUrl: imageUrl,
+          );
+
+          state = state.copyWith(
+            status: ProfileStatus.imageUploaded,
+            profile: updatedProfile,
+            uploadedImageUrl: imageUrl,
+          );
+
+          // Save updated profile
+          updateProfile(updatedProfile);
+        }
+      },
+    );
+  }
+
+  void clearError() {
+    state = state.copyWith(errorMessage: null);
+  }
+}
