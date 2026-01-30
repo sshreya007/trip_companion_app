@@ -11,4 +11,9 @@ class ApiConfig {
   static const String login = '/auth/login';
   static const String getCurrentUser = '/auth/me';
   static const String logout = '/auth/logout';
+
+  // Profile Endpoints
+  static const String getProfile = '/profile/{userId}';
+  static const String updateProfile = '/profile/{userId}';
+  static const String uploadProfileImage = '/profile/upload';
 }
