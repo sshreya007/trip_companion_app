@@ -1,31 +1,44 @@
 import 'package:equatable/equatable.dart';
-import 'dart:io';
+import 'package:trip_planner/features/profile/domain/entities/profile_entity.dart';
 
-enum ProfileStatus { initial, loading, success, error }
+enum ProfileStatus {
+  initial,
+  loading,
+  loaded,
+  updating,
+  updated,
+  uploadingImage,
+  imageUploaded,
+  error,
+}
 
 class ProfileState extends Equatable {
   final ProfileStatus status;
-  final File? image;
+  final ProfileEntity? profile;
   final String? errorMessage;
+  final String? uploadedImageUrl;
 
   const ProfileState({
     this.status = ProfileStatus.initial,
-    this.image,
+    this.profile,
     this.errorMessage,
+    this.uploadedImageUrl,
   });
 
   ProfileState copyWith({
     ProfileStatus? status,
-    File? image,
+    ProfileEntity? profile,
     String? errorMessage,
+    String? uploadedImageUrl,
   }) {
     return ProfileState(
       status: status ?? this.status,
-      image: image ?? this.image,
+      profile: profile ?? this.profile,
       errorMessage: errorMessage,
+      uploadedImageUrl: uploadedImageUrl,
     );
   }
 
   @override
-  List<Object?> get props => [status, image, errorMessage];
+  List<Object?> get props => [status, profile, errorMessage, uploadedImageUrl];
 }

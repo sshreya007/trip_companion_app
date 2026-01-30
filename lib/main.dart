@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:trip_planner/features/auth/data/models/auth_hive_model.dart';
 import 'package:trip_planner/features/auth/presentation/pages/login_page.dart';
+import 'package:trip_planner/features/profile/data/models/profile_model.dart';
 import 'package:trip_planner/screens/onboarding_screen.dart';
 import 'package:trip_planner/features/auth/presentation/pages/signup_page.dart';
 import 'package:trip_planner/screens/splash_screen.dart';
@@ -13,12 +14,15 @@ void main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter(AuthHiveModelAdapter());
+  Hive.registerAdapter(ProfileModelAdapter());
 
   // ✅ Open the auth box for storing users
   await Hive.openBox<AuthHiveModel>('authBox');
 
   // ✅ Open a separate box for storing preferences (like current user email)
   await Hive.openBox('prefsBox');
+
+  await Hive.openBox<ProfileModel>('profileBox');
 
   runApp(const ProviderScope(child: MyApp()));
 }
