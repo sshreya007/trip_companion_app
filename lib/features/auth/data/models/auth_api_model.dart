@@ -1,3 +1,5 @@
+import 'package:trip_planner/features/auth/domain/entities/auth_entity.dart';
+
 class AuthApiModel {
   final String? id;
   final String username;
@@ -10,6 +12,11 @@ class AuthApiModel {
     required this.email,
     this.status,
   });
+
+  // Add this factory constructor
+  factory AuthApiModel.fromEntity(AuthEntity entity) {
+    return AuthApiModel(email: entity.email, username: entity.username);
+  }
 
   factory AuthApiModel.fromJson(Map<String, dynamic> json) {
     return AuthApiModel(

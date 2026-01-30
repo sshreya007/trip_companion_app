@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:trip_planner/features/auth/data/models/auth_hive_model.dart';
 import 'package:trip_planner/features/auth/presentation/state/auth_state.dart';
 import 'package:trip_planner/features/auth/presentation/view_model/auth_view_model.dart';
-
-import 'package:trip_planner/screens/login.dart';
+import 'package:trip_planner/features/auth/presentation/pages/login_page.dart';
 
 class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
@@ -13,17 +14,23 @@ class SignupPage extends ConsumerStatefulWidget {
 }
 
 class _SignupPageState extends ConsumerState<SignupPage> {
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  // ❌ REMOVE initState() completely - DON'T put ref.listen here!
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    final authState = ref.watch(authViewModelProvider);
 
-    /// LISTEN TO AUTH STATE
+    // ✅ PUT ref.listen INSIDE build() method
     ref.listen<AuthState>(authViewModelProvider, (previous, next) {
-      //  Error
+      // 🔴 Error
       if (next.status == AuthStatus.error && next.errorMessage != null) {
         ScaffoldMessenger.of(
           context,
@@ -31,23 +38,30 @@ class _SignupPageState extends ConsumerState<SignupPage> {
         ref.read(authViewModelProvider.notifier).clearError();
       }
 
-      //  Registered Successfully
+      // 🟢 Registration success
       if (next.status == AuthStatus.registered) {
+        /// 🔍 DEBUG: CHECK HIVE DATA
+        try {
+          final box = Hive.box<AuthHiveModel>('authBox');
+          debugPrint('✅ HIVE USERS COUNT: ${box.length}');
+          debugPrint('✅ HIVE USERS: ${box.values.toList()}');
+        } catch (e) {
+          debugPrint('❌ HIVE CHECK ERROR: $e');
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration successful')),
+          const SnackBar(
+            content: Text('Registration successful! Please login.'),
+            backgroundColor: Colors.green,
+          ),
         );
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          MaterialPageRoute(builder: (_) => const LoginPage()),
         );
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final authState = ref.watch(authViewModelProvider);
 
     return Scaffold(
       body: Stack(
@@ -70,10 +84,10 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                 children: [
                   const SizedBox(height: 120),
                   const Text(
-                    "Welcome\n.....",
+                    "Create\nAccount",
                     style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 80),
+                  const SizedBox(height: 60),
 
                   /// Card
                   Container(
@@ -93,27 +107,46 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                         ),
                         const SizedBox(height: 20),
 
-                        /// Username
                         _inputField(
-                          controller: usernameController,
-                          hint: "Enter your Username",
+                          controller: firstNameController,
+                          hint: "First Name",
                           icon: Icons.person,
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 12),
 
-                        /// Email
+                        _inputField(
+                          controller: lastNameController,
+                          hint: "Last Name",
+                          icon: Icons.person_outline,
+                        ),
+                        const SizedBox(height: 12),
+
+                        _inputField(
+                          controller: usernameController,
+                          hint: "Username",
+                          icon: Icons.account_circle,
+                        ),
+                        const SizedBox(height: 12),
+
                         _inputField(
                           controller: emailController,
-                          hint: "Enter your Email",
+                          hint: "Email",
                           icon: Icons.email,
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 12),
 
-                        /// Password
                         _inputField(
                           controller: passwordController,
-                          hint: "Enter your Password",
+                          hint: "Password",
                           icon: Icons.lock,
+                          obscure: true,
+                        ),
+                        const SizedBox(height: 12),
+
+                        _inputField(
+                          controller: confirmPasswordController,
+                          hint: "Confirm Password",
+                          icon: Icons.lock_outline,
                           obscure: true,
                         ),
                         const SizedBox(height: 20),
@@ -124,19 +157,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                           child: ElevatedButton(
                             onPressed: authState.status == AuthStatus.loading
                                 ? null
-                                : () {
-                                    ref
-                                        .read(authViewModelProvider.notifier)
-                                        .register(
-                                          fullName: usernameController.text
-                                              .trim(),
-                                          username: usernameController.text
-                                              .trim(),
-                                          email: emailController.text.trim(),
-                                          password: passwordController.text
-                                              .trim(),
-                                        );
-                                  },
+                                : _onRegisterPressed,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
                               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -170,7 +191,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const LoginScreen(),
+                                    builder: (_) => const LoginPage(),
                                   ),
                                 );
                               },
@@ -196,7 +217,50 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     );
   }
 
-  /// Input Field Widget
+  /// 🔐 Register logic + validation
+  void _onRegisterPressed() {
+    print('🔘 SIGNUP BUTTON PRESSED');
+
+    if (firstNameController.text.trim().isEmpty ||
+        lastNameController.text.trim().isEmpty ||
+        usernameController.text.trim().isEmpty ||
+        emailController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty ||
+        confirmPasswordController.text.trim().isEmpty) {
+      _showSnackBar('All fields are required');
+      return;
+    }
+
+    if (passwordController.text.trim().length < 6) {
+      _showSnackBar('Password must be at least 6 characters');
+      return;
+    }
+
+    if (passwordController.text.trim() !=
+        confirmPasswordController.text.trim()) {
+      _showSnackBar('Passwords do not match');
+      return;
+    }
+
+    print('✅ VALIDATION PASSED - Calling ViewModel');
+
+    ref
+        .read(authViewModelProvider.notifier)
+        .register(
+          fullName:
+              '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
+          username: usernameController.text.trim(),
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
   Widget _inputField({
     required TextEditingController controller,
     required String hint,
@@ -223,9 +287,12 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
   @override
   void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
     usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 }

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:trip_planner/features/auth/domain/entities/auth_entity.dart';
+import '../../domain/entities/auth_entity.dart';
 
 enum AuthStatus {
   initial,
@@ -13,42 +13,26 @@ enum AuthStatus {
 class AuthState extends Equatable {
   final AuthStatus status;
   final AuthEntity? user;
-  final String? message;
+  final String? errorMessage;
 
-  const AuthState({this.status = AuthStatus.initial, this.user, this.message});
+  const AuthState({
+    this.status = AuthStatus.initial,
+    this.user,
+    this.errorMessage,
+  });
 
-  AuthState copyWith({AuthStatus? status, AuthEntity? user, String? message}) {
+  AuthState copyWith({
+    AuthStatus? status,
+    AuthEntity? user,
+    String? errorMessage,
+  }) {
     return AuthState(
       status: status ?? this.status,
       user: user ?? this.user,
-      message: message ?? this.message,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [status, user, message];
-
-  /// Initial state
-  factory AuthState.initial() => const AuthState();
-
-  /// Loading state
-  factory AuthState.loading() => const AuthState(status: AuthStatus.loading);
-
-  /// Authenticated state
-  factory AuthState.authenticated(AuthEntity user) =>
-      AuthState(status: AuthStatus.authenticated, user: user);
-
-  /// Unauthenticated state
-  factory AuthState.unauthenticated() =>
-      const AuthState(status: AuthStatus.unauthenticated);
-
-  /// Registered state
-  factory AuthState.registered() =>
-      const AuthState(status: AuthStatus.registered);
-
-  /// Error state
-  factory AuthState.error(String message) =>
-      AuthState(status: AuthStatus.error, message: message);
-
-  get errorMessage => null;
+  List<Object?> get props => [status, user, errorMessage];
 }

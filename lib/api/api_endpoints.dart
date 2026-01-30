@@ -1,43 +1,49 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  // Base URL - change this for production
+  // ================= Base =================
   static const String baseUrl = 'http://10.0.2.2:3000/api/v1';
-  //static const String baseUrl = 'http://localhost:3000/api/v1';
-  // For Android Emulator use: 'http://10.0.2.2:3000/api/v1'
-  // For iOS Simulator use: 'http://localhost:5000/api/v1'
-  // For Physical Device use your computer's IP: 'http://192.168.x.x:5000/api/v1'
+  // For Android Emulator: http://10.0.2.2:3000/api/v1
+  // For iOS Simulator: http://localhost:3000/api/v1
+  // For Physical device: http://192.168.x.x:3000/api/v1
 
   static const Duration connectionTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
 
-  // ============ Batch Endpoints ============
-  static const String batches = '/batches';
-  static String batchById(String id) => '/batches/$id';
+  // ================= Auth Endpoints =================
+  static const String auth = '/auth';
+  static const String login = '/auth/login';
+  static const String register = '/auth/register';
+  static const String logout = '/auth/logout';
+  static const String currentUser = '/auth/me';
 
-  // ============ Category Endpoints ============
-  static const String categories = '/categories';
-  static String categoryById(String id) => '/categories/$id';
+  // ================= User/Profile Endpoints =================
+  static const String users = '/users';
+  static String userById(String id) => '/users/$id';
+  static String userProfile(String id) => '/users/$id/profile';
+  static String userAvatar(String id) => '/users/$id/avatar';
 
-  // ============ Student Endpoints ============
-  static const String students = '/students';
-  static const String studentLogin = '/students/login';
-  static const String studentRegister = '/students/register';
-  static String studentById(String id) => '/students/$id';
-  static String studentPhoto(String id) => '/students/$id/photo';
+  // ================= Trip Endpoints =================
+  static const String trips = '/trips';
+  static String tripById(String id) => '/trips/$id';
+  static String tripsByUser(String userId) => '/trips/user/$userId';
+  static String tripJoin(String id) => '/trips/$id/join';
+  static String tripLeave(String id) => '/trips/$id/leave';
 
-  // ============ Item Endpoints ============
-  static const String items = '/items';
-  static String itemById(String id) => '/items/$id';
-  static String itemClaim(String id) => '/items/$id/claim';
+  // ================= Place/Destination Endpoints =================
+  static const String places = '/places';
+  static String placeById(String id) => '/places/$id';
+  static String placesByTrip(String tripId) => '/places/trip/$tripId';
 
-  // ============ Comment Endpoints ============
-  static const String comments = '/comments';
+  // ================= Booking Endpoints =================
+  static const String bookings = '/bookings';
+  static String bookingById(String id) => '/bookings/$id';
+  static String bookingsByUser(String userId) => '/bookings/user/$userId';
+  static String bookingsByTrip(String tripId) => '/bookings/trip/$tripId';
 
-  static String get register => null;
-
-  static String get login => null;
-  static String commentById(String id) => '/comments/$id';
-  static String commentsByItem(String itemId) => '/comments/item/$itemId';
-  static String commentLike(String id) => '/comments/$id/like';
+  // ================= Review Endpoints =================
+  static const String reviews = '/reviews';
+  static String reviewById(String id) => '/reviews/$id';
+  static String reviewsByPlace(String placeId) => '/reviews/place/$placeId';
+  static String reviewLike(String id) => '/reviews/$id/like';
 }

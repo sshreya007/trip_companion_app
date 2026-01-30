@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trip_planner/features/auth/presentation/pages/signup_page.dart';
 import 'package:trip_planner/features/auth/presentation/state/auth_state.dart';
 import 'package:trip_planner/features/auth/presentation/view_model/auth_view_model.dart';
-
 import 'package:trip_planner/screens/dashboard_screen.dart';
-import 'package:trip_planner/screens/signup.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -18,10 +17,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    final authState = ref.watch(authViewModelProvider);
 
-    /// LISTEN TO AUTH STATE CHANGES
+    /// ✅ LISTEN INSIDE BUILD (Riverpod 3)
     ref.listen<AuthState>(authViewModelProvider, (previous, next) {
       // 🔴 Error
       if (next.status == AuthStatus.error && next.errorMessage != null) {
@@ -31,7 +30,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ref.read(authViewModelProvider.notifier).clearError();
       }
 
-      // 🟢 Success Login
+      // 🟢 Login success
       if (next.status == AuthStatus.authenticated && next.user != null) {
         Navigator.pushReplacement(
           context,
@@ -39,16 +38,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         );
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final authState = ref.watch(authViewModelProvider);
 
     return Scaffold(
       body: Stack(
         children: [
-          /// Background Image
+          /// Background
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -58,7 +52,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ),
           ),
 
-          /// Content
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(25),
@@ -72,7 +65,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   const SizedBox(height: 80),
 
-                  /// Card
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -90,7 +82,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                         const SizedBox(height: 20),
 
-                        /// Email
                         _inputField(
                           controller: emailController,
                           hint: "Enter your Email",
@@ -98,7 +89,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                         const SizedBox(height: 15),
 
-                        /// Password
                         _inputField(
                           controller: passwordController,
                           hint: "Enter your Password",
@@ -107,13 +97,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                         const SizedBox(height: 20),
 
-                        /// Login Button
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: authState.status == AuthStatus.loading
                                 ? null
                                 : () {
+                                    if (emailController.text.trim().isEmpty ||
+                                        passwordController.text
+                                            .trim()
+                                            .isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Email and password are required',
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
+
                                     ref
                                         .read(authViewModelProvider.notifier)
                                         .login(
@@ -143,24 +148,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           ),
                         ),
 
-                        const SizedBox(height: 15),
-
-                        /// Signup
+                        /// Signup Redirect
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text("Don't have an account? "),
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const SignupScreen(),
+                                    builder: (_) => const SignupPage(),
                                   ),
                                 );
                               },
                               child: const Text(
-                                "Signup",
+                                "Sign Up",
                                 style: TextStyle(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.bold,
@@ -181,7 +184,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  /// Input Field Widget
   Widget _inputField({
     required TextEditingController controller,
     required String hint,
