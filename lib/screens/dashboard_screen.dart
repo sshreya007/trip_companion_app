@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trip_planner/screens/calendar_screen.dart';
 import 'package:trip_planner/screens/home_screen.dart';
 import 'package:trip_planner/screens/notification_screen.dart';
-import 'package:trip_planner/screens/settings_screen.dart';
+import 'package:trip_planner/features/profile/presentation/pages/settings_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -25,7 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dashboard"),
+        title: const Text("TripCompanion"),
         automaticallyImplyLeading: false,
       ),
       backgroundColor: const Color(0xFFE0F7F6),
@@ -34,7 +34,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              "Welcome to the Dashboard Screen",
+              "Plan your trips easily with Trip Companion!",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
