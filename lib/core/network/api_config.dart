@@ -16,4 +16,11 @@ class ApiConfig {
   static const String getProfile = '/profile/{userId}';
   static const String updateProfile = '/profile/{userId}';
   static const String uploadProfileImage = '/profile/upload';
+
+  // Package Endpoints
+  static const String getAllPackages = '/packages';
+  static const String getPackageById = '/packages/{id}';
+  static const String getFeaturedPackages = '/packages/featured';
+  static const String getPackagesByCategory = '/packages/category/{category}';
+  static const String checkAvailability = '/packages/{id}/availability';
 }
