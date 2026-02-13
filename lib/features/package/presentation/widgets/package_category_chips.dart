@@ -24,8 +24,8 @@ class PackageCategoryChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
-      margin: const EdgeInsets.symmetric(vertical: 16),
+      height: 50, // ✅ REDUCED from 60
+      margin: const EdgeInsets.symmetric(vertical: 10), // ✅ REDUCED from 16
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -39,10 +39,13 @@ class PackageCategoryChips extends StatelessWidget {
             onTap: () => onCategorySelected(category['name']),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ), // ✅ REDUCED vertical padding
               decoration: BoxDecoration(
                 color: isSelected ? category['color'] : Colors.white,
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(20), // ✅ REDUCED from 25
                 border: Border.all(
                   color: isSelected ? category['color'] : Colors.grey[300]!,
                   width: 2,
@@ -62,14 +65,14 @@ class PackageCategoryChips extends StatelessWidget {
                 children: [
                   Icon(
                     category['icon'],
-                    size: 20,
+                    size: 18, // ✅ REDUCED from 20
                     color: isSelected ? Colors.white : category['color'],
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6), // ✅ REDUCED from 8
                   Text(
                     _capitalize(category['name']),
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13, // ✅ REDUCED from 14
                       fontWeight: FontWeight.w600,
                       color: isSelected ? Colors.white : Colors.grey[800],
                     ),

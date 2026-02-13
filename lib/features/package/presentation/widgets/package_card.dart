@@ -43,18 +43,18 @@ class PackageCard extends StatelessWidget {
                   ),
                   child: CachedNetworkImage(
                     imageUrl: package.coverImage,
-                    height: 140,
+                    height: 120, // ✅ REDUCED from 140
                     width: double.infinity,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
-                      height: 140,
+                      height: 120, // ✅ REDUCED from 140
                       color: Colors.grey[300],
                       child: const Center(
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
                     ),
                     errorWidget: (context, url, error) => Container(
-                      height: 140,
+                      height: 120, // ✅ REDUCED from 140
                       color: Colors.grey[300],
                       child: const Icon(
                         Icons.image,
@@ -72,8 +72,8 @@ class PackageCard extends StatelessWidget {
                     right: 8,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                        horizontal: 6, // ✅ REDUCED from 8
+                        vertical: 3, // ✅ REDUCED from 4
                       ),
                       decoration: BoxDecoration(
                         color: Colors.amber,
@@ -82,13 +82,17 @@ class PackageCard extends StatelessWidget {
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.star, size: 12, color: Colors.white),
+                          Icon(
+                            Icons.star,
+                            size: 10,
+                            color: Colors.white,
+                          ), // ✅ REDUCED from 12
                           SizedBox(width: 2),
                           Text(
                             'Featured',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 10,
+                              fontSize: 9, // ✅ REDUCED from 10
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -104,8 +108,8 @@ class PackageCard extends StatelessWidget {
                     left: 8,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                        horizontal: 6, // ✅ REDUCED from 8
+                        vertical: 3, // ✅ REDUCED from 4
                       ),
                       decoration: BoxDecoration(
                         color: Colors.red,
@@ -115,7 +119,7 @@ class PackageCard extends StatelessWidget {
                         '-${package.price.discountPercentage.toStringAsFixed(0)}%',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 11,
+                          fontSize: 10, // ✅ REDUCED from 11
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -127,9 +131,10 @@ class PackageCard extends StatelessWidget {
             // Content Section
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(10), // ✅ REDUCED from 12
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min, // ✅ ADDED
                   children: [
                     // Title
                     Text(
@@ -137,82 +142,81 @@ class PackageCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 14, // ✅ REDUCED from 15
                         fontWeight: FontWeight.bold,
-                        height: 1.3,
+                        height: 1.2, // ✅ REDUCED from 1.3
                       ),
                     ),
-                    const SizedBox(height: 4),
-
+                    const SizedBox(height: 3), // ✅ REDUCED from 4
                     // Location
                     Row(
                       children: [
                         Icon(
                           Icons.location_on,
-                          size: 14,
+                          size: 12,
                           color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
+                        ), // ✅ REDUCED from 14
+                        const SizedBox(width: 3), // ✅ REDUCED from 4
                         Expanded(
                           child: Text(
                             '${package.destination}, ${package.country}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 11, // ✅ REDUCED from 12
                               color: Colors.grey[600],
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-
+                    const SizedBox(height: 6), // ✅ REDUCED from 8
                     // Rating & Duration
                     Row(
                       children: [
                         // Rating
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 3,
+                            horizontal: 5, // ✅ REDUCED from 6
+                            vertical: 2, // ✅ REDUCED from 3
                           ),
                           decoration: BoxDecoration(
                             color: Colors.amber.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(
+                              6,
+                            ), // ✅ REDUCED from 8
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Icon(
                                 Icons.star,
-                                size: 12,
+                                size: 11,
                                 color: Colors.amber,
-                              ),
-                              const SizedBox(width: 3),
+                              ), // ✅ REDUCED from 12
+                              const SizedBox(width: 2), // ✅ REDUCED from 3
                               Text(
                                 package.rating.average.toStringAsFixed(1),
                                 style: const TextStyle(
-                                  fontSize: 11,
+                                  fontSize: 10, // ✅ REDUCED from 11
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(width: 8),
-
+                        const SizedBox(width: 6), // ✅ REDUCED from 8
                         // Duration
                         Icon(
                           Icons.access_time,
-                          size: 12,
+                          size: 11,
                           color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 3),
+                        ), // ✅ REDUCED from 12
+                        const SizedBox(width: 2), // ✅ REDUCED from 3
                         Text(
                           '${package.duration.days}D/${package.duration.nights}N',
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 10, // ✅ REDUCED from 11
                             fontWeight: FontWeight.w600,
                             color: Colors.grey[700],
                           ),
@@ -230,28 +234,30 @@ class PackageCard extends StatelessWidget {
                           Text(
                             '\$${package.price.originalPrice!.toStringAsFixed(0)}',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 11, // ✅ REDUCED from 12
                               color: Colors.grey[500],
                               decoration: TextDecoration.lineThrough,
                             ),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 4), // ✅ REDUCED from 6
                         ],
                         Text(
                           '\$${package.price.amount.toStringAsFixed(0)}',
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 16, // ✅ REDUCED from 18
                             fontWeight: FontWeight.bold,
                             color: Colors.teal,
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 3), // ✅ REDUCED from 4
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 2),
+                          padding: const EdgeInsets.only(
+                            bottom: 1,
+                          ), // ✅ REDUCED from 2
                           child: Text(
                             '/person',
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 9, // ✅ REDUCED from 10
                               color: Colors.grey[600],
                             ),
                           ),

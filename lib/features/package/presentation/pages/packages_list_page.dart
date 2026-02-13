@@ -60,234 +60,231 @@ class _PackagesListPageState extends ConsumerState<PackagesListPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await ref
-              .read(packageViewModelProvider.notifier)
-              .getAllPackages(
-                category: _selectedCategory,
-                search: _searchController.text.isEmpty
-                    ? null
-                    : _searchController.text,
-                refresh: true,
-              );
-        },
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            // Beautiful App Bar with Gradient
-            SliverAppBar(
-              expandedHeight: 200,
-              floating: false,
-              pinned: true,
-              backgroundColor: Colors.teal,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.teal.shade400, Colors.teal.shade700],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: SafeArea(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            'Discover Your\nNext Adventure',
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              height: 1.2,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        // Search Bar
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(30),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: TextField(
-                              controller: _searchController,
-                              decoration: InputDecoration(
-                                hintText: 'Search destinations...',
-                                prefixIcon: const Icon(
-                                  Icons.search,
-                                  color: Colors.teal,
-                                ),
-                                suffixIcon: _searchController.text.isNotEmpty
-                                    ? IconButton(
-                                        icon: const Icon(Icons.clear),
-                                        onPressed: () {
-                                          _searchController.clear();
-                                          _onSearch();
-                                        },
-                                      )
-                                    : null,
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 15,
-                                ),
-                              ),
-                              onChanged: (value) => setState(() {}),
-                              onSubmitted: (_) => _onSearch(),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                ),
+      body: Column(
+        children: [
+          // Header Section
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.teal.shade400, Colors.teal.shade700],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
-
-            // Category Chips
-            SliverToBoxAdapter(
-              child: PackageCategoryChips(
-                selectedCategory: _selectedCategory,
-                onCategorySelected: (category) {
-                  setState(() {
-                    _selectedCategory = category == _selectedCategory
-                        ? null
-                        : category;
-                  });
-                  _onCategoryChanged();
-                },
-              ),
-            ),
-
-            // Featured Section - ✅ FIXED: Correct class name
-            if (packageState.featuredPackages.isNotEmpty)
-              const SliverToBoxAdapter(
-                child:
-                    FeaturedPackagesSection(), // ✅ Changed from FeaturedPackageCard
-              ),
-
-            // Section Header
-            SliverToBoxAdapter(
+            child: SafeArea(
+              bottom: false,
               child: Padding(
                 padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
-                    Text(
-                      _selectedCategory != null
-                          ? '${_selectedCategory!.toUpperCase()} Packages'
-                          : 'All Packages',
-                      style: const TextStyle(
-                        fontSize: 22,
+                    // Title
+                    const Text(
+                      'Discover Your\nNext Adventure',
+                      style: TextStyle(
+                        fontSize: 28,
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        height: 1.2,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    if (packageState.packages.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.teal.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          '${packageState.packages.length} found',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                    const SizedBox(height: 20),
+
+                    // Search Bar
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search destinations...',
+                          prefixIcon: const Icon(
+                            Icons.search,
                             color: Colors.teal,
                           ),
+                          suffixIcon: _searchController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() {});
+                                    _onSearch();
+                                  },
+                                )
+                              : null,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 15,
+                          ),
                         ),
+                        onChanged: (value) => setState(() {}),
+                        onSubmitted: (_) => _onSearch(),
                       ),
+                    ),
                   ],
                 ),
               ),
             ),
+          ),
 
-            // Loading State
-            if (packageState.status == PackageStatus.loading &&
-                packageState.packages.isEmpty)
-              const SliverFillRemaining(
-                child: Center(child: CircularProgressIndicator()),
-              )
-            // Empty State
-            else if (packageState.packages.isEmpty)
-              SliverFillRemaining(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.explore_off,
-                        size: 80,
-                        color: Colors.grey[400],
+          // Category Chips
+          PackageCategoryChips(
+            selectedCategory: _selectedCategory,
+            onCategorySelected: (category) {
+              setState(() {
+                _selectedCategory = category == _selectedCategory
+                    ? null
+                    : category;
+              });
+              _onCategoryChanged();
+            },
+          ),
+
+          // Content
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await ref
+                    .read(packageViewModelProvider.notifier)
+                    .getAllPackages(
+                      category: _selectedCategory,
+                      search: _searchController.text.isEmpty
+                          ? null
+                          : _searchController.text,
+                      refresh: true,
+                    );
+              },
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    // Featured Section
+                    if (packageState.featuredPackages.isNotEmpty)
+                      const FeaturedPackagesSection(),
+
+                    // Section Header
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _selectedCategory != null
+                                ? '${_selectedCategory!.toUpperCase()} Packages'
+                                : 'All Packages',
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (packageState.packages.isNotEmpty)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.teal.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                '${packageState.packages.length} found',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.teal,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'No packages found',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[600],
+                    ),
+
+                    // Loading State
+                    if (packageState.status == PackageStatus.loading &&
+                        packageState.packages.isEmpty)
+                      const Padding(
+                        padding: EdgeInsets.all(40),
+                        child: CircularProgressIndicator(),
+                      )
+                    // Empty State
+                    else if (packageState.packages.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(40),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.explore_off,
+                              size: 80,
+                              color: Colors.grey[400],
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'No packages found',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Try adjusting your filters',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    // Packages Grid
+                    else
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.68,
+                                crossAxisSpacing: 15,
+                                mainAxisSpacing: 15,
+                              ),
+                          itemCount: packageState.packages.length,
+                          itemBuilder: (context, index) {
+                            final package = packageState.packages[index];
+                            return PackageCard(package: package);
+                          },
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Try adjusting your filters',
-                        style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+
+                    // Loading More Indicator
+                    if (packageState.status == PackageStatus.loadingMore)
+                      const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: CircularProgressIndicator(),
                       ),
-                    ],
-                  ),
-                ),
-              )
-            // Packages Grid
-            else
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.68,
-                    crossAxisSpacing: 15,
-                    mainAxisSpacing: 15,
-                  ),
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final package = packageState.packages[index];
-                    return PackageCard(package: package);
-                  }, childCount: packageState.packages.length),
+
+                    // Bottom Spacing
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
-
-            // Loading More Indicator
-            if (packageState.status == PackageStatus.loadingMore)
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-              ),
-
-            // Bottom Spacing
-            const SliverToBoxAdapter(child: SizedBox(height: 20)),
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

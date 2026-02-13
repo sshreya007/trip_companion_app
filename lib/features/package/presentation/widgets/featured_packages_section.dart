@@ -33,7 +33,7 @@ class FeaturedPackagesSection extends ConsumerWidget {
           ),
         ),
         SizedBox(
-          height: 280,
+          height: 260,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -85,18 +85,20 @@ class FeaturedPackageCard extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               // Background Image
-              CachedNetworkImage(
-                imageUrl: package.coverImage,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey[300],
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.image, size: 50),
-                ),
-              ),
+              package.coverImage.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: package.coverImage,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey[300],
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                      errorWidget: (context, url, error) => Image.asset(
+                        'assets/images/image 1.png',
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Image.asset('assets/images/image 1.png', fit: BoxFit.cover),
 
               // Gradient Overlay
               Container(

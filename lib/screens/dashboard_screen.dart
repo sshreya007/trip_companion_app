@@ -24,12 +24,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("TripCompanion"),
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.teal,
-        foregroundColor: Colors.white,
-      ),
+      // appBar: AppBar(
+      //   title: const Text("TripCompanion"),
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor: Colors.teal,
+      //   foregroundColor: Colors.white,
+      // ),
       backgroundColor: const Color(0xFFE0F7F6),
       body: lstBottomScreen[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
