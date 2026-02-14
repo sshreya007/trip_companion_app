@@ -23,4 +23,13 @@ class ApiConfig {
   static const String getFeaturedPackages = '/packages/featured';
   static const String getPackagesByCategory = '/packages/category/{category}';
   static const String checkAvailability = '/packages/{id}/availability';
+
+  // Booking Endpoints
+  static const String createBooking = '/bookings';
+  static const String getUserBookings = '/bookings';
+  static const String getBookingById = '/bookings/{id}';
+  static const String getBookingByReference = '/bookings/reference/{reference}';
+  static const String cancelBooking = '/bookings/{id}';
+  static const String addReview = '/bookings/{id}/review';
+  static const String getBookingStats = '/bookings/stats';
 }
