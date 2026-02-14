@@ -6,11 +6,11 @@ import 'package:trip_planner/features/booking/domain/usecases/get_user_bookings_
 import 'package:trip_planner/features/booking/domain/usecases/get_booking_by_id_usecase.dart';
 import 'package:trip_planner/features/booking/domain/usecases/cancel_booking_usecase.dart';
 import 'package:trip_planner/features/booking/domain/usecases/add_review_usecase.dart';
-import 'package:trip_planner/features/booking/presentation/state/booking_state.dart'
-    hide BookingStatus;
+import 'package:trip_planner/features/booking/presentation/state/booking_state.dart';
+// hide BookingStatus;
 import 'package:trip_planner/features/booking/data/datasources/remote/booking_remote_datasource.dart';
 import 'package:trip_planner/features/booking/data/repositories/booking_repository_impl.dart';
-import 'package:trip_planner/core/network/dio_client.dart';
+// import 'package:trip_planner/core/network/dio_client.dart';
 
 // Providers
 final bookingRemoteDatasourceProvider = Provider<BookingRemoteDatasource>((
