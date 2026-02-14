@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:trip_planner/features/booking/domain/entities/booking_entity.dart';
 
-enum BookingStatus {
+// ✅ RENAMED: BookingStatus → BookingUIStatus (to avoid conflict with entity enum)
+enum BookingUIStatus {
   initial,
   loading,
   loaded,
@@ -13,7 +14,7 @@ enum BookingStatus {
 }
 
 class BookingState extends Equatable {
-  final BookingStatus status;
+  final BookingUIStatus status; // ✅ Using BookingUIStatus
   final List<BookingEntity> bookings;
   final BookingEntity? selectedBooking;
   final Map<String, dynamic>? bookingStats;
@@ -22,7 +23,7 @@ class BookingState extends Equatable {
   final int currentPage;
 
   const BookingState({
-    this.status = BookingStatus.initial,
+    this.status = BookingUIStatus.initial, // ✅ BookingUIStatus.initial
     this.bookings = const [],
     this.selectedBooking,
     this.bookingStats,
@@ -32,7 +33,7 @@ class BookingState extends Equatable {
   });
 
   BookingState copyWith({
-    BookingStatus? status,
+    BookingUIStatus? status, // ✅ BookingUIStatus
     List<BookingEntity>? bookings,
     BookingEntity? selectedBooking,
     Map<String, dynamic>? bookingStats,

@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:trip_planner/core/errors/failure.dart';
-import 'package:trip_planner/features/booking/data/datasource/remote/booking_remote_datasource.dart';
 import 'package:trip_planner/features/booking/domain/entities/booking_entity.dart';
 import 'package:trip_planner/features/booking/domain/repositories/booking_repository.dart';
+import 'package:trip_planner/features/booking/data/datasources/remote/booking_remote_datasource.dart';
 
 class BookingRepositoryImpl implements IBookingRepository {
   final BookingRemoteDatasource _remoteDatasource;
