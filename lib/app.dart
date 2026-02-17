@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trip_planner/core/widgets/shake_logout_wrapper.dart';
 // import 'package:trip_planner/screens/signup.dart';
 import 'package:trip_planner/screens/splash_screen.dart';
 import 'package:trip_planner/theme/theme.dart';
@@ -11,7 +12,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: getApplicationTheme(),
-      home: SplashScreen(),
+      home: ShakeLogoutWrapper(child: SplashScreen()),
     );
   }
 }
