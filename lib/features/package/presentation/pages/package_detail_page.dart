@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:trip_planner/features/booking/presentation/pages/booking_form_page.dart';
 import 'package:trip_planner/features/package/domain/entities/package_entity.dart';
 import 'package:trip_planner/features/package/presentation/view_model/package_view_model.dart';
 import 'package:trip_planner/features/package/presentation/state/package_state.dart';
@@ -710,10 +711,10 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
               child: ElevatedButton(
                 onPressed: package.availability.isAvailable
                     ? () {
-                        // TODO: Navigate to booking page
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Booking feature coming soon!'),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BookingFormPage(package: package),
                           ),
                         );
                       }

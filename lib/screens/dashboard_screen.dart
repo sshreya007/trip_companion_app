@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:trip_planner/features/booking/presentation/pages/my_bookings_page.dart';
 import 'package:trip_planner/screens/home_screen.dart';
-import 'package:trip_planner/screens/notification_screen.dart';
+
 import 'package:trip_planner/features/profile/presentation/pages/settings_screen.dart';
 import 'package:trip_planner/features/package/presentation/pages/packages_list_page.dart';
 
@@ -17,7 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final List<Widget> lstBottomScreen = const [
     HomeScreen(),
     PackagesListPage(),
-    NotificationScreen(),
+    MyBookingsPage(),
     SettingsScreen(),
   ];
 
@@ -38,8 +39,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Packages'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.book_online),
+            label: 'Bookings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

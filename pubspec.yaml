@@ -12,6 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  sensors_plus: ^5.0.1
+
   # UI Icons
   cupertino_icons: ^1.0.8
 

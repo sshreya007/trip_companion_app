@@ -885,6 +885,9 @@ class _BookingFormPageState extends ConsumerState<BookingFormPage> {
         .createBooking(booking);
 
     if (success && mounted) {
+      await ref
+          .read(bookingViewModelProvider.notifier)
+          .getUserBookings(refresh: true);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Booking created successfully!'),
