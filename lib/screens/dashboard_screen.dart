@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trip_planner/core/widgets/rotation_wrapper.dart';
 import 'package:trip_planner/features/booking/presentation/pages/my_bookings_page.dart';
 import 'package:trip_planner/screens/home_screen.dart';
 
@@ -24,36 +25,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("TripCompanion"),
-      //   automaticallyImplyLeading: false,
-      //   backgroundColor: Colors.teal,
-      //   foregroundColor: Colors.white,
-      // ),
-      backgroundColor: const Color(0xFFE0F7F6),
-      body: lstBottomScreen[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Packages'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book_online),
-            label: 'Bookings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.teal,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+    return RotationWrapper(
+      child: Scaffold(
+        // appBar: AppBar(
+        //   title: const Text("TripCompanion"),
+        //   automaticallyImplyLeading: false,
+        //   backgroundColor: Colors.teal,
+        //   foregroundColor: Colors.white,
+        // ),
+        backgroundColor: const Color(0xFFE0F7F6),
+        body: lstBottomScreen[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore),
+              label: 'Packages',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.book_online),
+              label: 'Bookings',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.teal,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
       ),
     );
   }
