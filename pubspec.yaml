@@ -78,6 +78,8 @@ dev_dependencies:
   analyzer: 6.4.1
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
 
   flutter_lints: ^6.0.0
 
@@ -91,15 +93,19 @@ dev_dependencies:
   mockito: ^5.4.4
   fake_async: ^1.3.1
 
+  
+
+
+
 flutter:
   uses-material-design: true
 
-  # Assets (UNCHANGED ✅)
+  # Assets ()
   assets:
     - assets/icons/
     - assets/images/
 
-  # Fonts (UNCHANGED ✅)
+  # Fonts ()
   fonts:
     - family: Open Sans Bold
       fonts:
@@ -110,3 +116,17 @@ flutter:
     - family: Open Sans Regular
       fonts:
         - asset: assets/fonts/OpenSans-Regular.ttf
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: "AppIcon"
+  image_path: "assets/icons/app_logo_tripcompanion.png"  # logo path
+  min_sdk_android: 21
+  remove_alpha_ios: true
+
+  # ✅ ADD THIS - Creates better Android icons
+  adaptive_icon_background: "#00BCD4"  # Teal background
+  adaptive_icon_foreground: "assets/icons/app_logo_tripcompanion.png"
+
+  
+  
