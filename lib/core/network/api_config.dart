@@ -1,7 +1,7 @@
 class ApiConfig {
   // Your backend API base URL
   static const String baseUrl =
-      'http://10.0.2.2:5050/api'; // For Android emulator
+      'http://192.168.1.4:5050/api'; // For Android emulator
   // static const String baseUrl = 'http://localhost:5050/api'; // For iOS simulator
   // static const String baseUrl = 'http://YOUR_IP:5050/api'; // For real device
   // static const String baseUrl = 'https://your-api.com/api'; // For production

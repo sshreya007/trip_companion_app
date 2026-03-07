@@ -24,7 +24,9 @@ class _ShakeLogoutWrapperState extends ConsumerState<ShakeLogoutWrapper> {
 
     _shakeDetector = ShakeDetector(
       onShake: _onShakeDetected,
-      shakeThreshold: 2.5, // Adjust sensitivity (lower = more sensitive)
+      shakeThreshold: 12.0,
+      shakeSlopTime: 600,
+      shakeCountResetTime: 2000,
     );
 
     _shakeDetector.startListening();

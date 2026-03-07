@@ -1,70 +1,78 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:flutter/foundation.dart';
 
 class ShakeDetector {
   ShakeDetector({
     required this.onShake,
-    this.shakeThreshold = 2.7,
-    this.shakeDuration = const Duration(milliseconds: 500),
+    this.shakeThreshold = 12.0, // ✅ Must be > 9.8 (gravity)
+    this.shakeSlopTime = 500,
+    this.shakeCountResetTime = 3000,
+    this.requiredShakeCount = 3,
   });
 
-  /// Callback when shake is detected
   final VoidCallback onShake;
-
-  /// Threshold for shake detection (higher = harder shake needed)
   final double shakeThreshold;
+  final int shakeSlopTime;
+  final int shakeCountResetTime;
+  final int requiredShakeCount;
 
-  /// Duration within which shake must occur
-  final Duration shakeDuration;
+  StreamSubscription<UserAccelerometerEvent>? _streamSubscription;
+  int _mShakeCount = 0;
+  int _mShakeTimestamp = DateTime.now().millisecondsSinceEpoch;
 
-  StreamSubscription<AccelerometerEvent>? _streamSubscription;
-  DateTime? _lastShakeTime;
-  int _shakeCount = 0;
-
-  /// Start listening for shake
+  // ✅ Use userAccelerometerEventStream - gravity already removed!
   void startListening() {
-    _streamSubscription = accelerometerEventStream().listen((
-      AccelerometerEvent event,
-    ) {
-      final gX = event.x;
-      final gY = event.y;
-      final gZ = event.z;
+    debugPrint('🔔 Shake detector started listening...');
 
-      // Calculate total acceleration
-      final gForce = sqrt(gX * gX + gY * gY + gZ * gZ);
+    _streamSubscription = userAccelerometerEventStream().listen(
+      (UserAccelerometerEvent event) {
+        var gX = event.x;
+        var gY = event.y;
+        var gZ = event.z;
 
-      // Check if shake threshold exceeded
-      if (gForce > shakeThreshold) {
-        final now = DateTime.now();
+        // ✅ With userAccelerometer, gravity is removed.
+        // At rest this will be ~0, during shake it spikes.
+        double acceleration = sqrt(gX * gX + gY * gY + gZ * gZ);
 
-        // First shake or shake within duration window
-        if (_lastShakeTime == null ||
-            now.difference(_lastShakeTime!) > shakeDuration) {
-          _lastShakeTime = now;
-          _shakeCount = 1;
-        } else {
-          _shakeCount++;
+        if (acceleration > shakeThreshold) {
+          var now = DateTime.now().millisecondsSinceEpoch;
+
+          if (_mShakeTimestamp + shakeSlopTime > now) {
+            return;
+          }
+
+          if (_mShakeTimestamp + shakeCountResetTime < now) {
+            _mShakeCount = 0;
+          }
+
+          _mShakeTimestamp = now;
+          _mShakeCount++;
+
+          debugPrint(
+            '🔔 Shake detected! Count: $_mShakeCount, Force: ${acceleration.toStringAsFixed(2)}',
+          );
+
+          if (_mShakeCount >= requiredShakeCount) {
+            debugPrint('🎉 SHAKE THRESHOLD REACHED - TRIGGERING CALLBACK!');
+            _mShakeCount = 0;
+            onShake();
+          }
         }
-
-        // Require 3 shakes to trigger
-        if (_shakeCount >= 3) {
-          _shakeCount = 0;
-          _lastShakeTime = null;
-          onShake();
-        }
-      }
-    });
+      },
+      onError: (error) {
+        debugPrint('❌ Shake detector error: $error');
+      },
+    );
   }
 
-  /// Stop listening
   void stopListening() {
+    debugPrint('🔔 Shake detector stopped listening');
     _streamSubscription?.cancel();
     _streamSubscription = null;
   }
 
-  /// Dispose
   void dispose() {
     stopListening();
   }

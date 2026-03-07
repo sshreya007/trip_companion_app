@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trip_planner/core/widgets/shake_logout_wrapper.dart';
+
 import 'package:trip_planner/features/auth/presentation/pages/signup_page.dart';
 import 'package:trip_planner/features/auth/presentation/state/auth_state.dart';
 import 'package:trip_planner/features/auth/presentation/view_model/auth_view_model.dart';
@@ -31,10 +33,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       }
 
       // 🟢 Login success
+      // 🟢 Login success
+      // if (next.status == AuthStatus.authenticated && next.user != null) {
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (_) => const DashboardScreen()),
+      //   );
+      // }
+      // 🟢 Login success
       if (next.status == AuthStatus.authenticated && next.user != null) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const DashboardScreen()),
+          MaterialPageRoute(
+            builder: (_) => ShakeLogoutWrapper(
+              // ✅ ADD THIS WRAPPER
+              child: const DashboardScreen(),
+            ),
+          ),
         );
       }
     });

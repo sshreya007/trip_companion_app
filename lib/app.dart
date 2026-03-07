@@ -12,7 +12,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: getApplicationTheme(),
-      home: ShakeLogoutWrapper(child: SplashScreen()),
+      home: SplashScreen(),
     );
   }
 }
