@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'package:trip_planner/features/auth/data/models/auth_hive_model.dart';
+import 'package:trip_planner/features/auth/presentation/pages/login_page.dart';
+import 'package:trip_planner/features/profile/data/models/profile_model.dart';
 import 'package:trip_planner/screens/onboarding_screen.dart';
-import 'package:trip_planner/screens/signup.dart';
+import 'package:trip_planner/features/auth/presentation/pages/signup_page.dart';
 import 'package:trip_planner/screens/splash_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(AuthHiveModelAdapter());
+  Hive.registerAdapter(ProfileModelAdapter());
+
+  // ✅ Open the auth box for storing users
+  await Hive.openBox<AuthHiveModel>('authBox');
+
+  // ✅ Open a separate box for storing preferences (like current user email)
+  await Hive.openBox('prefsBox');
+
+  await Hive.openBox<ProfileModel>('profileBox');
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,13 +34,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
       initialRoute: '/splash',
-
       routes: {
         '/splash': (_) => const SplashScreen(),
         '/onboarding': (_) => const OnboardingScreen(),
-        '/signup': (_) => const SignupScreen(),
+        '/signup': (_) => const SignupPage(),
+        '/login': (_) => const LoginPage(),
       },
     );
   }
